@@ -11,6 +11,12 @@ pipeline {
             }
         }
         
+        stage('Trivy FS Scan') {
+            steps {
+                sh 'trivy fs .'
+            }
+        }
+        
         stage('Compile') {
             steps {
                 sh 'mvn compile'
@@ -41,6 +47,11 @@ pipeline {
             }
         }
         
+        stage('Trivy Image Scan') {
+            steps {
+                sh 'trivy image prakashkuvam/addressbook:v1'
+            }
+        }
+        
     }
 }
-
