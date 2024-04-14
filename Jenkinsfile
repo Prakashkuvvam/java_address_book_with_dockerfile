@@ -49,7 +49,7 @@ pipeline {
         
         stage('Trivy Image Scan') {
             steps {
-                sh ' image prakashkuvam/addressbook:v1'
+                sh 'trivy image prakashkuvam/addressbook:v1'
             }
         }
         
