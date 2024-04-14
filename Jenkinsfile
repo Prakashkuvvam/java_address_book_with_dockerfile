@@ -49,9 +49,41 @@ pipeline {
         
         stage('Trivy Image Scan') {
             steps {
-                sh 'trivy image prakashkuvam/addressbook:v1'
+                sh ' image prakashkuvam/addressbook:v1'
             }
         }
         
+        // stage('Slack Notification') {
+        //     steps {
+        //         slackSend botUser: true, channel: '#java-project', message: 'completed ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_STATUS}', teamDomain: 'java-vprofile-project', tokenCredentialId: 'slack-token'
+        //     }
+        // }
+        
     }
+    
+    post {
+        success {
+            script {
+                // Send Slack notification for successful build
+                def jobName = env.JOB_NAME
+                def buildNumber = env.BUILD_NUMBER
+                def slackMessage = "Job  ${jobName} (Build ${buildNumber}) succeeded. Good job team!"
+                
+                slackSend botUser: true, channel: '#java-project', message: slackMessage, teamDomain: 'java-vprofile-project', tokenCredentialId: 'slack-token'
+                //slackSend(channel: '#your-slack-channel', message: slackMessage)
+            }
+        }
+        failure {
+            script {
+                // Send Slack notification for failed build
+                def jobName = env.JOB_NAME
+                def buildNumber = env.BUILD_NUMBER
+                def slackMessage = "Job  ${jobName} (Build ${buildNumber}) failed. Please investigate!"
+                
+                slackSend botUser: true, channel: '#java-project', message: slackMessage, teamDomain: 'java-vprofile-project', tokenCredentialId: 'slack-token'
+                //slackSend(channel: '#your-slack-channel', message: slackMessage)
+            }
+        }
+    }
+    
 }
